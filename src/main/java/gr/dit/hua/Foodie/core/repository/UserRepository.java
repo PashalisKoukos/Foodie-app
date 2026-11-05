@@ -16,10 +16,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Same as above, but by username.
     Optional<User> findByUsername(String username);
 
+    // Finds a user by mobile phone number. Useful for login or user lookup.
+    Optional<User> findByMobilePhoneNumber(String mobilePhoneNumber);
+
     // Checks if the email is already taken, without loading the whole user.
     // Used during registration.
     boolean existsByEmail(String email);
 
     // Checks if the username is already taken. Used during registration.
     boolean existsByUsername(String username);
+
+    // Checks if the mobile phone number is already taken. Used during registration.
+    boolean existsByMobilePhoneNumber(String mobilePhoneNumber);
 }
