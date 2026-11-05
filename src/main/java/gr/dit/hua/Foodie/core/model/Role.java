@@ -7,7 +7,6 @@ public enum Role {
     // Registers publicly, places and tracks their own orders
     CUSTOMER,
 
-    // Manages one store and its orders. Created only as seed data,
-    // never through registration.
+    // Manages one store and its orders
     OWNER
 }

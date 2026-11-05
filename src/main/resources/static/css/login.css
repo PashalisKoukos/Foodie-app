@@ -1,0 +1,129 @@
+/* Basic page styling and background positioning */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    /* Background position set to 46% to shift the image slightly to the left */
+    background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('../img/foodie_back.png') no-repeat 46% center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    color: #fff;
+}
+
+/* Error and success messages */
+div[style*="color: red"],
+div[style*="color: green"] {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 12px 20px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    text-align: center;
+    width: 100%;
+    max-width: 380px;
+    box-sizing: border-box;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+div[style*="color: red"] {
+    border-left: 5px solid #ff4d4d;
+    color: #d93838 !important;
+}
+
+div[style*="color: green"] {
+    border-left: 5px solid #28a745;
+    color: #218838 !important;
+}
+
+/* Form container card */
+form {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    padding: 35px 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 380px;
+    box-sizing: border-box;
+}
+
+/* Field labels */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
+    font-size: 0.9rem;
+}
+
+/* Input fields */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ccd0d5;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fafbfc;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #ff6b6b;
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.15);
+}
+
+/* Submit button (Sign In) */
+button[type="submit"] {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, #ff6b6b, #fa5252);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(250, 82, 82, 0.3);
+}
+
+button[type="submit"]:hover {
+    background: linear-gradient(135deg, #fa5252, #e03131);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(250, 82, 82, 0.4);
+}
+
+button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+/* Registration link */
+p {
+    margin-top: 25px;
+    color: #f1f3f5;
+    font-size: 0.95rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+p a {
+    color: #ff8787;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+p a:hover {
+    color: #ffa8a8;
+    text-decoration: underline;
+}

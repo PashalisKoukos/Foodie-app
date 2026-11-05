@@ -26,8 +26,7 @@ public class User {
     private String email;
 
     @Column(name = "mobile_phone_number", nullable = false, length = 18)
-    private String mobilePhoneNumber;  //E164
-
+    private String mobilePhoneNumber;  // E164 format
 
     // BCrypt hash of the password. The plain password is never stored.
     @Column(name = "password_hash", nullable = false, length = 255)
@@ -47,22 +46,19 @@ public class User {
     protected User() {
     }
 
-    public User(Long id, String username, String email, String mobilePhoneNumber, String passwordHash, Role role, Instant createdAt) {
-        this.id = id;
+    // The role is set only here. Registration always passes CUSTOMER,
+    // so a user cannot make themselves an owner.
+    public User(String username, String email, String mobilePhoneNumber,
+                String passwordHash, Role role) {
         this.username = username;
         this.email = email;
         this.mobilePhoneNumber = mobilePhoneNumber;
         this.passwordHash = passwordHash;
         this.role = role;
-        this.createdAt = createdAt;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -107,10 +103,6 @@ public class User {
 
     public Instant getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
     }
 
     @Override
