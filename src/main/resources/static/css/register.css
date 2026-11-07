@@ -1,7 +1,5 @@
 body{
-    /*KEEP THE SAME BACKGROUND IMAGE*/
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* Ρυθμίσαμε το background-position στο 46% για να έρθει λίγο πιο αριστερά */
     background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('../img/foodie_back.png') no-repeat 46% center fixed;
     background-size: cover;
     min-height: 100vh;

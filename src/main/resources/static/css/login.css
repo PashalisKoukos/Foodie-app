@@ -1,8 +1,5 @@
-/* Basic page styling and background positioning */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-    /* Background position set to 46% to shift the image slightly to the left */
     background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('../img/foodie_back.png') no-repeat 46% center fixed;
     background-size: cover;
     min-height: 100vh;
