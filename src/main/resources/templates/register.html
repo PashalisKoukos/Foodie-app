@@ -1,26 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org" lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8" />
-    <title>Foodie - Registration</title>
+    <meta charset="UTF-8">
+    <title>Foodie - Register</title>
     <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="icon" type="image/png" th:href="@{/img/ico.png}" />
 </head>
 <body>
-    <!--
-    TODO: Implement the User Registration Form using Thymeleaf,
-          following the same structure and conventions as login.html.
 
-
-    2. Use Thymeleaf attributes (th:action, th:object, th:field)
-       to bind the form fields to the User model.
-
-    3. Submit the registration form using POST to the /register endpoint.
-
-    4. Ensure all required fields have appropriate validation.
-
-    -->
-
-    <!--TODO: HERE IMPLEMENTATION-->
+    <h2>Create your Foodie Account</h2>
 
     <!-- ERROR / SUCCESS MESSAGES -->
     <div th:if="${param.error}" style="color: red;">
@@ -33,14 +21,12 @@
         Username or email already exists.
     </div>
 
-
-    <!-- REGISTER FORM (Handled automatically by Spring Security) -->
-    <form th:action="@{/register}" method="post">
+    <!-- REGISTER FORM (Bound to User model via Thymeleaf) -->
+    <form th:action="@{/register}" th:object="${user}" method="post">
 
         <!-- Account Type -->
         <label for="role">Account Type</label>
-
-        <select name="role" id="role" required>
+        <select th:field="*{role}" id="role" required>
             <option value="" disabled selected>Select account type</option>
             <option value="CUSTOMER">Customer</option>
             <option value="OWNER">Owner</option>
@@ -48,25 +34,25 @@
         <br/>
 
         <label>Username</label>
-        <input type="text" name="username" required />
+        <input type="text" th:field="*{username}" required />
         <br/>
 
         <label>Email</label>
-        <input type="text" name="email" required />
+        <input type="email" th:field="*{email}" required />
         <br/>
 
         <label>Phone Number</label>
-        <input type="tel" name="mobilePhoneNumber" required />
+        <input type="tel" th:field="*{mobilePhoneNumber}" required />
         <br/>
 
         <label>Password</label>
-        <input type="password" name="password" required />
+        <input type="password" th:field="*{passwordHash}" required />
         <br/>
 
         <button type="submit">Register Account</button>
     </form>
 
-    <!-- USEFUL LINKS -->
+    <!-- LINK TO LOGIN PAGE -->
     <p>
         Already have an account? <a th:href="@{/login}">Sign In here</a>
     </p>
