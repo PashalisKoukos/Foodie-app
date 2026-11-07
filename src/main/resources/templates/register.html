@@ -10,15 +10,6 @@
     TODO: Implement the User Registration Form using Thymeleaf,
           following the same structure and conventions as login.html.
 
-    Requirements:
-    1. Create a registration form with the following fields:
-       - Role: A dropdown (<select>) with two options:
-           a) CUSTOMER
-           b) OWNER
-       - Username
-       - Email
-       - Mobile Phone Number
-       - Password
 
     2. Use Thymeleaf attributes (th:action, th:object, th:field)
        to bind the form fields to the User model.
@@ -27,11 +18,58 @@
 
     4. Ensure all required fields have appropriate validation.
 
-    5. Add a link at the bottom of the page redirecting users
-       to the login page (/login) if they already have an account.
     -->
 
     <!--TODO: HERE IMPLEMENTATION-->
+
+    <!-- ERROR / SUCCESS MESSAGES -->
+    <div th:if="${param.error}" style="color: red;">
+        Registration failed. Please check your information.
+    </div>
+    <div th:if="${param.success}" style="color: green;">
+        Registration successful! You can now sign in.
+    </div>
+    <div th:if="${param.exists}" style="color: red;">
+        Username or email already exists.
+    </div>
+
+
+    <!-- REGISTER FORM (Handled automatically by Spring Security) -->
+    <form th:action="@{/register}" method="post">
+
+        <!-- Account Type -->
+        <label for="role">Account Type</label>
+
+        <select name="role" id="role" required>
+            <option value="" disabled selected>Select account type</option>
+            <option value="CUSTOMER">Customer</option>
+            <option value="OWNER">Owner</option>
+        </select>
+        <br/>
+
+        <label>Username</label>
+        <input type="text" name="username" required />
+        <br/>
+
+        <label>Email</label>
+        <input type="text" name="email" required />
+        <br/>
+
+        <label>Phone Number</label>
+        <input type="tel" name="mobilePhoneNumber" required />
+        <br/>
+
+        <label>Password</label>
+        <input type="password" name="password" required />
+        <br/>
+
+        <button type="submit">Register Account</button>
+    </form>
+
+    <!-- USEFUL LINKS -->
+    <p>
+        Already have an account? <a th:href="@{/login}">Sign In here</a>
+    </p>
 
 </body>
 </html>
