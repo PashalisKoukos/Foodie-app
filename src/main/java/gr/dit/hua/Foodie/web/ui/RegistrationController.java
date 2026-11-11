@@ -4,78 +4,71 @@ import gr.dit.hua.Foodie.core.model.Role;
 import gr.dit.hua.Foodie.core.model.User;
 import gr.dit.hua.Foodie.core.repository.UserRepository;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.server.ResponseStatusException;
 
-/**
- * UI controller for managing user registration.
- */
 @Controller
 public class RegistrationController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
-    public RegistrationController(final UserRepository userRepository) {
-        if (userRepository == null) {
-            throw new NullPointerException("UserRepository cannot be null");
-        }
+    public RegistrationController(final UserRepository userRepository, final PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/register")
     public String showRegistrationForm(final Model model) {
-        // Create an empty User instance for the Thymeleaf form mapping
-        final User user = new User(
-                null,
-                "", "",
-                "",
-                Role.CUSTOMER
-        );
-        model.addAttribute("user", user);
+        model.addAttribute("user", new User());
         return "register";
     }
 
     @PostMapping("/register")
-    public String handleFormSubmission(@ModelAttribute("user") User user) {
-        // Extract fields for validation checks
+    public String handleFormSubmission(@Valid @ModelAttribute("user") User user,
+                                       BindingResult bindingResult,
+                                       Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "register";
+        }
+
         final String username = user.getUsername();
         final String email = user.getEmail();
         final String mobilePhoneNumber = user.getMobilePhoneNumber();
 
-        // Check if username already exists in the database
+
         if (this.userRepository.existsByUsername(username)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists!");
+            bindingResult.rejectValue("username", "error.user", "Username already exists!");
+            return "register";
         }
 
-        // Check if email address already exists in the database
         if (this.userRepository.existsByEmail(email)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email address already exists!");
+            bindingResult.rejectValue("email", "error.user", "Email address already exists!");
+            return "register";
         }
 
-        // Check if mobile phone number already exists in the database
         if (this.userRepository.existsByMobilePhoneNumber(mobilePhoneNumber)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mobile phone number already exists!");
+            bindingResult.rejectValue("mobilePhoneNumber", "error.user", "Mobile phone number already exists!");
+            return "register";
         }
 
-        // Encode password securely using BCrypt before saving
+        user.setRole(Role.CUSTOMER);
         user.setPasswordHash(this.passwordEncoder.encode(user.getPasswordHash()));
 
-        // Save user entity to db
-        user = this.userRepository.save(user);
-        LOGGER.info("User created successfully: {}", user.getUsername());
+        User savedUser = this.userRepository.save(user);
+        LOGGER.info("User created successfully: {}", savedUser.getUsername());
 
-        // Redirect to login page upon successful registration
         return "redirect:/login?success";
     }
 }

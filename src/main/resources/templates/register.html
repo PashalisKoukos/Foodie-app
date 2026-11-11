@@ -10,52 +10,50 @@
 
     <h2>Create your Foodie Account</h2>
 
-    <!-- ERROR / SUCCESS MESSAGES -->
-    <div th:if="${param.error}" style="color: red;">
-        Registration failed. Please check your information.
-    </div>
-    <div th:if="${param.success}" style="color: green;">
-        Registration successful! You can now sign in.
-    </div>
-    <div th:if="${param.exists}" style="color: red;">
-        Username or email already exists.
-    </div>
-
-    <!-- REGISTER FORM (Bound to User model via Thymeleaf) -->
+    <!-- REGISTER FORM -->
     <form th:action="@{/register}" th:object="${user}" method="post">
-
-        <!-- Account Type -->
-        <label for="role">Account Type</label>
-        <select th:field="*{role}" id="role" required>
-            <option value="" disabled selected>Select account type</option>
-            <option value="CUSTOMER">Customer</option>
-            <option value="OWNER">Owner</option>
-        </select>
-        <br/>
 
         <label>Username</label>
         <input type="text" th:field="*{username}" required />
+        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color: red; font-size: 13px;"></div>
         <br/>
 
         <label>Email</label>
         <input type="email" th:field="*{email}" required />
+        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red; font-size: 13px;"></div>
         <br/>
 
         <label>Phone Number</label>
         <input type="tel" th:field="*{mobilePhoneNumber}" required />
+        <div th:if="${#fields.hasErrors('mobilePhoneNumber')}" th:errors="*{mobilePhoneNumber}" style="color: red; font-size: 13px;"></div>
         <br/>
 
         <label>Password</label>
-        <input type="password" th:field="*{passwordHash}" required />
+        <div style="position: relative; display: flex; align-items: center;">
+            <input type="password" id="registerPassword" th:field="*{passwordHash}" required style="width: 100%; padding-right: 50px;" />
+            <button type="button" onclick="togglePassword('registerPassword', this)" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: #e63946; font-weight: 600; font-size: 13px;">Show</button>
+        </div>
+        <div th:if="${#fields.hasErrors('passwordHash')}" th:errors="*{passwordHash}" style="color: red; font-size: 13px;"></div>
         <br/>
 
         <button type="submit">Register Account</button>
     </form>
 
-    <!-- LINK TO LOGIN PAGE -->
     <p>
         Already have an account? <a th:href="@{/login}">Sign In here</a>
     </p>
 
+    <script>
+        function togglePassword(fieldId, btn) {
+            const passwordField = document.getElementById(fieldId);
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                btn.textContent = "Hide";
+            } else {
+                passwordField.type = "password";
+                btn.textContent = "Show";
+            }
+        }
+    </script>
 </body>
 </html>
