@@ -27,9 +27,11 @@
         <br/>
 
         <label>Password</label>
-        <input type="password" name="password" required />
+        <div style="position: relative; display: flex; align-items: center;">
+            <input type="password" id="loginPassword" name="password" required style="width: 100%; padding-right: 50px;" />
+            <button type="button" onclick="togglePassword('loginPassword', this)" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: #e63946; font-weight: 600; font-size: 13px;">Show</button>
+        </div>
         <br/>
-
         <button type="submit">Sign In</button>
     </form>
 
@@ -37,6 +39,19 @@
     <p>
         Don't have an account? <a th:href="@{/register}">Register here</a>
     </p>
+
+    <script>
+        function togglePassword(fieldId, btn) {
+            const passwordField = document.getElementById(fieldId);
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                btn.textContent = "Hide";
+            } else {
+                passwordField.type = "password";
+                btn.textContent = "Show";
+            }
+        }
+    </script>
 
 </body>
 </html>

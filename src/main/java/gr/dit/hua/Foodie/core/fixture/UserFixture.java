@@ -5,6 +5,7 @@ import gr.dit.hua.Foodie.core.model.User;
 import gr.dit.hua.Foodie.core.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ import com.github.javafaker.Faker;
  * Component responsible for seeding initial user data into the database.
  */
 @Component
-public final class UserFixture {
+public final class UserFixture implements CommandLineRunner {
 
     // Logger instance for recording execution steps and information
     private static final Logger LOGGER = LoggerFactory.getLogger(UserFixture.class);
@@ -35,7 +36,8 @@ public final class UserFixture {
     /**
      * Runs the seeding process
      */
-    public void run() {
+    @Override
+    public void run(String... args) {
         // Idempotency check: verify if users already exist in the database
         final long usersCount = this.userRepository.count();
         if (usersCount > 0) {
