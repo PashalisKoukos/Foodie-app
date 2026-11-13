@@ -11,7 +11,9 @@
     <h2>Create your Foodie Account</h2>
 
     <!-- REGISTER FORM -->
-    <form th:action="@{/register}" th:object="${user}" method="post">
+    <form th:action="@{/register}" th:object="${registrationRequest}" method="post">
+
+        <div th:if="${errorMessage}" style="color: red; margin-bottom: 10px;" th:text="${errorMessage}"></div>
 
         <label>Username</label>
         <input type="text" th:field="*{username}" required />
@@ -29,11 +31,8 @@
         <br/>
 
         <label>Password</label>
-        <div style="position: relative; display: flex; align-items: center;">
-            <input type="password" id="registerPassword" th:field="*{passwordHash}" required style="width: 100%; padding-right: 50px;" />
-            <button type="button" onclick="togglePassword('registerPassword', this)" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: #e63946; font-weight: 600; font-size: 13px;">Show</button>
-        </div>
-        <div th:if="${#fields.hasErrors('passwordHash')}" th:errors="*{passwordHash}" style="color: red; font-size: 13px;"></div>
+        <input type="password" th:field="*{rawPassword}" required />
+        <div th:if="${#fields.hasErrors('rawPassword')}" th:errors="*{rawPassword}" style="color: red; font-size: 13px;"></div>
         <br/>
 
         <button type="submit">Register Account</button>

@@ -1,13 +1,11 @@
 package gr.dit.hua.Foodie.web.ui;
 
-import gr.dit.hua.Foodie.core.model.Role;
-import gr.dit.hua.Foodie.core.model.User;
-import gr.dit.hua.Foodie.core.repository.UserRepository;
-
+import gr.dit.hua.Foodie.core.service.impl.UserServiceImpl;
+import gr.dit.hua.Foodie.core.service.model.RegistrationRequest;
+import gr.dit.hua.Foodie.core.service.model.RegistrationResult;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,56 +17,39 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class RegistrationController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
+    private final UserServiceImpl userService;
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    public RegistrationController(final UserRepository userRepository, final PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public RegistrationController(UserServiceImpl userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/register")
     public String showRegistrationForm(final Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("registrationRequest", new RegistrationRequest("", "", "", ""));
         return "register";
     }
 
     @PostMapping("/register")
-    public String handleFormSubmission(@Valid @ModelAttribute("user") User user,
-                                       BindingResult bindingResult,
-                                       Model model) {
-
+    public String handleFormSubmission(
+            @Valid @ModelAttribute("registrationRequest") final RegistrationRequest registrationRequest,
+            BindingResult bindingResult,
+            final Model model
+    ) {
         if (bindingResult.hasErrors()) {
             return "register";
         }
 
-        final String username = user.getUsername();
-        final String email = user.getEmail();
-        final String mobilePhoneNumber = user.getMobilePhoneNumber();
+        // Κλήση του service που επιστρέφει RegistrationResult
+        RegistrationResult registrationResult = this.userService.register(registrationRequest);
 
-
-        if (this.userRepository.existsByUsername(username)) {
-            bindingResult.rejectValue("username", "error.user", "Username already exists!");
-            return "register";
+        if (registrationResult.created()) {
+            LOGGER.info("User created successfully: {}", registrationRequest.username());
+            return "redirect:/login?success";
         }
 
-        if (this.userRepository.existsByEmail(email)) {
-            bindingResult.rejectValue("email", "error.user", "Email address already exists!");
-            return "register";
-        }
-
-        if (this.userRepository.existsByMobilePhoneNumber(mobilePhoneNumber)) {
-            bindingResult.rejectValue("mobilePhoneNumber", "error.user", "Mobile phone number already exists!");
-            return "register";
-        }
-
-        user.setRole(Role.CUSTOMER);
-        user.setPasswordHash(this.passwordEncoder.encode(user.getPasswordHash()));
-
-        User savedUser = this.userRepository.save(user);
-        LOGGER.info("User created successfully: {}", savedUser.getUsername());
-
-        return "redirect:/login?success";
+        // Αν απέτυχε, περνάμε το μήνυμα λάθους (reason) πίσω στη φόρμα
+        model.addAttribute("registrationRequest", registrationRequest);
+        model.addAttribute("errorMessage", registrationResult.reason());
+        return "register";
     }
 }
