@@ -1,5 +1,5 @@
 
-package gr.dit.hua.Foodie.config;
+package gr.dit.hua.Foodie.core.service.impl;
 
 import gr.dit.hua.Foodie.core.model.User;
 import gr.dit.hua.Foodie.core.repository.UserRepository;
