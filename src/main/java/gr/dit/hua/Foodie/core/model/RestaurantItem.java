@@ -1,7 +1,8 @@
 package gr.dit.hua.Foodie.core.model;
 
-
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.Instant;
 
@@ -14,19 +15,24 @@ public class RestaurantItem {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "item_name", nullable = false, unique = true, length = 255)
+    // Αφαίρεσα το unique = true για να μπορούν διαφορετικά εστιατόρια να έχουν π.χ. "Burger"
+    @Column(name = "item_name", nullable = false, length = 255)
+    @NotBlank(message = "A restaurant item must have a name")
     private String name;
 
-    @Column(name = "description", nullable = false, unique = true, length = 255)
+    @Column(name = "description", nullable = false, length = 255)
+    @NotBlank(message = "Restaurant item must have a description")
     private String description;
 
     @Column(name = "price", nullable = false)
+    @Positive(message = "Price must be greater than zero")
     private double price;
 
     @Column(name = "available", nullable = false)
     private boolean available;
 
-    @OneToOne // One item belongs only to one restaurant
+    // ΔΙΟΡΘΩΣΗ: Από @OneToOne σε @ManyToOne (Πολυάριθμα items ανήκουν σε 1 εστιατόριο)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurantBelongsTo;
 
@@ -45,6 +51,7 @@ public class RestaurantItem {
         this.restaurantBelongsTo = restaurantBelongsTo;
     }
 
+    // Getters and Setters
     public Long getId() { return id; }
 
     public String getName() { return name; }

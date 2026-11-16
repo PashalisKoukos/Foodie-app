@@ -2,11 +2,13 @@ package gr.dit.hua.Foodie.core.repository;
 
 import gr.dit.hua.Foodie.core.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 // Data access for User. Spring Data generates the implementation at startup,
 // and the queries below are built from the method names.
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
     // Finds a user by email. Optional because email is unique (one result or none).
