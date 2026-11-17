@@ -6,6 +6,7 @@ import gr.dit.hua.Foodie.core.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ import com.github.javafaker.Faker;
  * Component responsible for seeding initial user data into the database.
  */
 @Component
+@Order(1) // running before RestaurantFixture
 public final class UserFixture implements CommandLineRunner {
 
     // Logger instance for recording execution steps and information

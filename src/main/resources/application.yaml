@@ -1,9 +1,11 @@
 spring:
+  config:
+    import: "optional:file:.env[.properties]"
   application:
     name: foodie
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:foodie}
-    username: ${DB_USER:foodie}
+    username: ${DB_USER}
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
