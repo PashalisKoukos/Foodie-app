@@ -7,7 +7,6 @@ import gr.dit.hua.Foodie.core.port.SmsNotificationPort;
 import gr.dit.hua.Foodie.core.port.dto.PhoneNumberValidationResult;
 import gr.dit.hua.Foodie.core.repository.UserRepository;
 import gr.dit.hua.Foodie.core.service.RegistrationService;
-import gr.dit.hua.Foodie.core.service.mapper.UserMapper;
 import gr.dit.hua.Foodie.core.service.model.RegistrationRequest;
 import gr.dit.hua.Foodie.core.service.model.RegistrationResult;
 import org.slf4j.Logger;
