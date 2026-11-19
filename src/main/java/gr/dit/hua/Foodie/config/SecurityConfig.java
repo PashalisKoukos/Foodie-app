@@ -63,6 +63,8 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         // Redirects users to the login page after successfully logging out.
                         .logoutSuccessUrl("/login?logout")
+                        .deleteCookies("JSESSIONID")
+                        .invalidateHttpSession(true)
 
                         // Allows all users to access the logout endpoint.
                         .permitAll()
