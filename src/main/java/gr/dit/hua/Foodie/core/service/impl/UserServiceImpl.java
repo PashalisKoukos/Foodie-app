@@ -4,7 +4,6 @@ import gr.dit.hua.Foodie.core.model.Role;
 import gr.dit.hua.Foodie.core.model.User;
 import gr.dit.hua.Foodie.core.repository.UserRepository;
 import gr.dit.hua.Foodie.core.service.RegistrationService;
-import gr.dit.hua.Foodie.core.service.mapper.UserMapper;
 import gr.dit.hua.Foodie.core.service.model.RegistrationRequest;
 import gr.dit.hua.Foodie.core.service.model.RegistrationResult;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,12 +15,10 @@ public class UserServiceImpl implements RegistrationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper;
     }
 
     @Override

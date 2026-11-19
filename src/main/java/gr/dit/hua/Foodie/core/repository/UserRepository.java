@@ -18,6 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Same as above, but by username.
     Optional<User> findByUsername(String username);
 
+    Optional<User> findByUsernameIgnoreCase(String username);
+
     // Finds a user by mobile phone number. Useful for login or user lookup.
     Optional<User> findByMobilePhoneNumber(String mobilePhoneNumber);
 

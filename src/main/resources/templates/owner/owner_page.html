@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Foodie - Owner Home</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="icon" type="image/png" th:href="@{/img/ico.png}" />
+</head>
+<body>
+
+    <div class="top-nav">
+        <div sec:authorize="isAuthenticated()" class="user-menu">
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <button type="submit" class="logout-btn">Sign Out</button>
+            </form>
+        </div>
+    </div>
+
+    <h1>Owner Home</h1>
+
+</body>
+</html>
