@@ -44,6 +44,10 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
+                        .deleteCookies("JSESSIONID")
+                        .invalidateHttpSession(true)
+
+                        // Allows all users to access the logout endpoint.
                         .permitAll()
                 );
 
