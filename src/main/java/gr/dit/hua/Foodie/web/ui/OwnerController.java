@@ -10,6 +10,6 @@ public class OwnerController {
 
     @GetMapping("/owner_page")
     public String dashboard() {
-        return "owner/owner_page"; // renders templates/owner/dashboard.html
+        return "owner/owner_page";
     }
 }

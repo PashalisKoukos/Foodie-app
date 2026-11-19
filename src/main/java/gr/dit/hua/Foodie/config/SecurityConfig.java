@@ -19,11 +19,13 @@ public class SecurityConfig {
         this.authSuccessHandler = authSuccessHandler;
     }
 
+    // Configures the password encoder using BCrypt.
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // Configures HTTP security, access permissions, login and logout.
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -46,7 +48,6 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?logout")
                         .deleteCookies("JSESSIONID")
                         .invalidateHttpSession(true)
-
                         // Allows all users to access the logout endpoint.
                         .permitAll()
                 );

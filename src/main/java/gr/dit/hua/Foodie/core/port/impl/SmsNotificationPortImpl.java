@@ -29,26 +29,25 @@ public class SmsNotificationPortImpl implements SmsNotificationPort {
         if (content == null) throw new NullPointerException();
         if (content.isBlank()) throw new IllegalArgumentException();
 
-        // Headers
-        // --------------------------------------------------
+        // Configures the HTTP headers.
 
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 
-        // Payload - Body
+        // Creates the SMS request payload.
         final SendSmsRequest body = new SendSmsRequest(e164, content);
 
-        // Για JSON :
-        // Alternative: (Spring speaks JSON!!! Search for ObjectMapper!)
+        // Alternative JSON payload using a Map:
+        // Spring automatically handles JSON serialization.
         // final Map<String, Object> body = Map.of("e164", e164, "body", content);
 
-        // HTTP Request
-        // --------------------------------------------------
+        // Sends the HTTP request to the external SMS service.
         final String baseUrl = RestApiClientConfig.BASE_URL;
         final String url = baseUrl + "/api/v1/sms";
         final HttpEntity<SendSmsRequest> entity = new HttpEntity<>(body, httpHeaders);
         final ResponseEntity<SendSmsResult> response = this.restTemplate.postForEntity(url, entity, SendSmsResult.class);
 
+        // Checks the response and returns the SMS sending result.
         if (response.getStatusCode().is2xxSuccessful()) {
             final SendSmsResult sendSmsResult = response.getBody();
             if (sendSmsResult == null) throw new NullPointerException();

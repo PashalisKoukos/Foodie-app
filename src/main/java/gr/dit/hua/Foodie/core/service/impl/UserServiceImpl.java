@@ -22,17 +22,15 @@ public class UserServiceImpl implements RegistrationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
     private final SmsNotificationPort smsNotificationPort ;
     private final PhoneNumberPort phoneNumberPort;
 
 
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper,
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                            PhoneNumberPort phoneNumberPort, SmsNotificationPort smsNotificationPort) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper;
         this.phoneNumberPort = phoneNumberPort ;
         this.smsNotificationPort = smsNotificationPort ;
     }

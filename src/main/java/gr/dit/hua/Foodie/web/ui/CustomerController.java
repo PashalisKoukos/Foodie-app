@@ -10,6 +10,6 @@ public class CustomerController {
 
     @GetMapping("/customer_page")
     public String home() {
-        return "customer/customer_page"; // renders templates/customer/customer_page.html
+        return "customer/customer_page";
     }
 }
