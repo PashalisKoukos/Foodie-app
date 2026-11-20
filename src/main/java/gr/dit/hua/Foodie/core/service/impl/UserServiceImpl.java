@@ -2,6 +2,7 @@ package gr.dit.hua.Foodie.core.service.impl;
 
 import gr.dit.hua.Foodie.core.model.Role;
 import gr.dit.hua.Foodie.core.model.User;
+import gr.dit.hua.Foodie.core.port.EmailNotificationPort;
 import gr.dit.hua.Foodie.core.port.PhoneNumberPort;
 import gr.dit.hua.Foodie.core.port.SmsNotificationPort;
 import gr.dit.hua.Foodie.core.port.dto.PhoneNumberValidationResult;
@@ -24,15 +25,17 @@ public class UserServiceImpl implements RegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final SmsNotificationPort smsNotificationPort ;
     private final PhoneNumberPort phoneNumberPort;
+    private final EmailNotificationPort emailNotificationPort ;
 
 
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                           PhoneNumberPort phoneNumberPort, SmsNotificationPort smsNotificationPort) {
+                           PhoneNumberPort phoneNumberPort, SmsNotificationPort smsNotificationPort, EmailNotificationPort  emailNotificationPort) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.phoneNumberPort = phoneNumberPort ;
         this.smsNotificationPort = smsNotificationPort ;
+        this.emailNotificationPort = emailNotificationPort ;
     }
 
     @Override
@@ -88,6 +91,16 @@ public class UserServiceImpl implements RegistrationService {
             }
         } catch (Exception e) {
             LOGGER.error("Failed to send welcome SMS to user {} ({})", user.getUsername(), e164Phone, e);
+        }
+
+        try {
+            emailNotificationPort.sendEmail(
+                    user.getEmail(),
+                    "Welcome to Foodie-App",
+                    "Your account on Foodie-App was successfully created."
+            );
+        } catch (Exception e) {
+            LOGGER.error("Failed to send welcome email to user {} ({})", user.getUsername(), user.getEmail(), e);
         }
 
         return RegistrationResult.success();
