@@ -15,6 +15,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -92,7 +93,7 @@ public class RestaurantFixture implements CommandLineRunner {
             String restaurantName = faker.company().name() + " " + cuisine;
             String address = faker.address().streetName() + " " + faker.number().digit();
             boolean isOpen = faker.bool().bool();
-            double minOrder = faker.number().randomDouble(2, 5, 15); // 5... 15 €
+            BigDecimal minOrder = BigDecimal.valueOf(faker.number().randomDouble(2, 5, 15)); // 5... 15 €
 
             Restaurant restaurant = new Restaurant(
                     restaurantName,
@@ -112,7 +113,7 @@ public class RestaurantFixture implements CommandLineRunner {
             for (int j = 0; j < itemsCount; j++) {
                 String itemName = faker.commerce().productName();
                 String description = faker.food().ingredient() + ", " + faker.food().spice();
-                double price = faker.number().randomDouble(2, 3, 20); // 3... 20 €
+                BigDecimal price = BigDecimal.valueOf(faker.number().randomDouble(2, 3, 20)); // 3... 20 €
 
                 RestaurantItem item = new RestaurantItem(
                         itemName,

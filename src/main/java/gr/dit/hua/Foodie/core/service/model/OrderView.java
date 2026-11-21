@@ -2,15 +2,17 @@ package gr.dit.hua.Foodie.core.service.model;
 
 import gr.dit.hua.Foodie.core.model.OrderStatus;
 import gr.dit.hua.Foodie.core.model.OrderType;
+
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
 public record OrderView(
-        int id,
+        Long id,
         String customerUsername,
         String restaurantName,
-        List<RestaurantItemView> items,
-        double totalPrice,
+        List<OrderItemView> items,
+        BigDecimal totalPrice,
         OrderStatus status,
         String deliveryAddress,
         OrderType orderType,
