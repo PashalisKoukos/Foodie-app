@@ -7,7 +7,7 @@ public record RestaurantView(
         String region,
         String address,
         boolean isOpen,
-        double minimumOrderAmount,
+        java.math.BigDecimal minimumOrderAmount,
         String ownerUsername
 ) {
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.hibernate.annotations.CreationTimestamp;
+
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
@@ -26,7 +28,7 @@ public class RestaurantItem {
 
     @Column(name = "price", nullable = false)
     @Positive(message = "Price must be greater than zero")
-    private double price;
+    private BigDecimal price;
 
     @Column(name = "available", nullable = false)
     private boolean available;
@@ -43,7 +45,7 @@ public class RestaurantItem {
     public RestaurantItem() {
     }
 
-    public RestaurantItem(String name, String description, double price, boolean available, Restaurant restaurantBelongsTo) {
+    public RestaurantItem(String name, String description, BigDecimal price, boolean available, Restaurant restaurantBelongsTo) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -60,8 +62,8 @@ public class RestaurantItem {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
 
     public boolean isAvailable() { return available; }
     public void setAvailable(boolean available) { this.available = available; }

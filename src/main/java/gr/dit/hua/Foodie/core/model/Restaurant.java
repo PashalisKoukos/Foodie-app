@@ -6,6 +6,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
@@ -43,7 +44,7 @@ public class Restaurant {
 
     @PositiveOrZero(message = "Minimum order amount cannot be negative")
     @Column(name = "minimum_order_amount", nullable = false)
-    private double minimumOrderAmount;
+    private BigDecimal minimumOrderAmount;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -52,7 +53,7 @@ public class Restaurant {
     public Restaurant() {
     }
 
-    public Restaurant(String name, String cuisine, String region, String address, boolean isOpen,double minimumOrderAmount, User owner) {
+    public Restaurant(String name, String cuisine, String region, String address, boolean isOpen,BigDecimal minimumOrderAmount, User owner) {
         this.name = name;
         this.cuisine = cuisine;
         this.region = region;
@@ -76,7 +77,7 @@ public class Restaurant {
     public User getOwner() { return owner; }
     public void setOwner(User owner) { this.owner = owner; }
     public Instant getCreatedAt() { return createdAt; }
-    public void setMinimumOrderAmount(double minimumOrderAmount) { this.minimumOrderAmount = minimumOrderAmount; }
-    public double getMinimumOrderAmount() { return minimumOrderAmount; }
+    public void setMinimumOrderAmount(BigDecimal minimumOrderAmount) { this.minimumOrderAmount = minimumOrderAmount; }
+    public BigDecimal getMinimumOrderAmount() { return minimumOrderAmount; }
 
 }

@@ -4,7 +4,7 @@ public record RestaurantItemView(
         Long id,
         String name,
         String description,
-        double price,
+        java.math.BigDecimal price,
         boolean available,
         Long restaurantId
 ) {

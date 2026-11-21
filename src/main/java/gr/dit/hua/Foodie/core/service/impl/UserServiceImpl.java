@@ -84,24 +84,25 @@ public class UserServiceImpl implements RegistrationService {
         );
 
         userRepository.save(user);
-        try {
-            final boolean sent = smsNotificationPort.sendSms(e164Phone, "Your account on Foodie-App was successfully created.");
-            if (!sent) {
-                LOGGER.warn("Welcome SMS was not sent to user {} ({})", user.getUsername(), e164Phone);
-            }
-        } catch (Exception e) {
-            LOGGER.error("Failed to send welcome SMS to user {} ({})", user.getUsername(), e164Phone, e);
-        }
+        // NOT CHARGE - COMMENT OUT
+//        try {
+//            final boolean sent = smsNotificationPort.sendSms(e164Phone, "Your account on Foodie-App was successfully created.");
+//            if (!sent) {
+//                LOGGER.warn("Welcome SMS was not sent to user {} ({})", user.getUsername(), e164Phone);
+//            }
+//        } catch (Exception e) {
+//            LOGGER.error("Failed to send welcome SMS to user {} ({})", user.getUsername(), e164Phone, e);
+//        }
 
-        try {
-            emailNotificationPort.sendEmail(
-                    user.getEmail(),
-                    "Welcome to Foodie-App",
-                    "Your account on Foodie-App was successfully created."
-            );
-        } catch (Exception e) {
-            LOGGER.error("Failed to send welcome email to user {} ({})", user.getUsername(), user.getEmail(), e);
-        }
+//        try {
+//            emailNotificationPort.sendEmail(
+//                    user.getEmail(),
+//                    "Welcome to Foodie-App",
+//                    "Your account on Foodie-App was successfully created."
+//            );
+//        } catch (Exception e) {
+//            LOGGER.error("Failed to send welcome email to user {} ({})", user.getUsername(), user.getEmail(), e);
+//        }
 
         return RegistrationResult.success();
     }

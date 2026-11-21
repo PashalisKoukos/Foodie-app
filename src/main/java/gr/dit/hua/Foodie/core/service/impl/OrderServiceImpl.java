@@ -11,6 +11,7 @@ import gr.dit.hua.Foodie.core.service.model.OrderView;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,16 +68,18 @@ public class OrderServiceImpl implements OrderService {
         if(!restaurant.isOpen()) throw new RuntimeException("Restaurant not open. Cannot create order");
 
         //4
-        double total = 0.0;
-        ArrayList<RestaurantItem> items = new ArrayList<>();
+        BigDecimal total = BigDecimal.ZERO;
+        ArrayList<OrderItem> items = new ArrayList<>();
         for (Long itemId : itemIds) {
             RestaurantItem item = itemRepository.findById(itemId).orElseThrow(()->new IllegalArgumentException("Item not found"));
-            items.add(item);
-            total += item.getPrice();
+            // FIX: quantity is 1 for now, because itemIds has no quantities.
+            // The price is copied into the line, so later menu price changes do not affect this order.
+            items.add(new OrderItem(item, 1, item.getPrice()));
+            total = total.add(item.getPrice());
         }
 
         //5
-        if(total < restaurant.getMinimumOrderAmount()) throw new RuntimeException("Order amount too low. Cannot create order");
+        if(total.compareTo(restaurant.getMinimumOrderAmount()) < 0) throw new RuntimeException("Order amount too low. Cannot create order"); // FIX: < does not work with BigDecimal
 
         //6
         if(orderType == OrderType.DELIVERY && (deliveryAddress == null || deliveryAddress.trim().isEmpty())) throw new RuntimeException("Delivery address not found");
@@ -85,7 +88,9 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setCustomer(customer);
         order.setRestaurant(restaurant);
-        order.setItems(items);
+        for (OrderItem line : items) {
+            order.addItem(line);
+        }
         order.setTotalPrice(total);
         order.setStatus(OrderStatus.PENDING);
         order.setOrderType(orderType);

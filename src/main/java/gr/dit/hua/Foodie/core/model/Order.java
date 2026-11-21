@@ -1,11 +1,13 @@
 package gr.dit.hua.Foodie.core.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.hibernate.annotations.CreationTimestamp;
+
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,12 +29,12 @@ public class Order {
     @NotNull
     private Restaurant restaurant;
 
-    @OneToMany // One order can have multiple items
-    private List<RestaurantItem> items;
+    // Saving the order also saves its items, in the same transaction
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> items = new ArrayList<>();
 
-    @Column(name = "total_price", nullable = false)
-    @Positive(message = "Total price must be greater than 0")
-    private double totalPrice;
+    @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalPrice;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -54,8 +56,8 @@ public class Order {
     public Order() {
     }
 
-    public Order(User customer, Restaurant restaurant, List<RestaurantItem> items,
-                 double totalPrice, OrderStatus status, String deliveryAddress, OrderType orderType) {
+    public Order(User customer, Restaurant restaurant, List<OrderItem> items,
+                 BigDecimal totalPrice, OrderStatus status, String deliveryAddress, OrderType orderType) {
         this.customer = customer;
         this.restaurant = restaurant;
         this.items = items;
@@ -97,12 +99,13 @@ public class Order {
         this.id = id;
     }
 
-    public List<RestaurantItem> getItems() {
-        return items;
+    public void addItem(OrderItem item) {
+        items.add(item);
+        item.setOrder(this);
     }
 
-    public void setItems(List<RestaurantItem> items) {
-        this.items = items;
+    public List<OrderItem> getItems() {
+        return items;
     }
 
     public OrderType getOrderType() {
@@ -129,11 +132,15 @@ public class Order {
         this.status = status;
     }
 
-    public double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
     }
 }
