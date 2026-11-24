@@ -101,4 +101,14 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         return Optional.empty();
     }
+
+    @Override
+    public Optional<RestaurantView> getRestaurantById(Long restaurantId) {
+        Optional<Restaurant> restaurantOpt = restaurantRepository.findById(restaurantId);
+        if (restaurantOpt.isPresent()) {
+            RestaurantView view = restaurantMapper.convertRestaurantToRestaurantView(restaurantOpt.get());
+            return Optional.of(view);
+        }
+        return Optional.empty();
+    }
 }

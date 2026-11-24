@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Foodie - Menu</title>
+    <link rel="stylesheet" th:href="@{/css/restaurant_menu.css}">
+    <link rel="icon" type="image/png" th:href="@{/img/ico.png}" />
+</head>
+<body>
+<main id="main-container">
+    <a id="back-link" th:href="@{/home}">Back to restaurants</a>
+
+    <h1 id="restaurant-title" th:text="${restaurant.name}">Restaurant</h1>
+    <p id="restaurant-meta">
+        <span id="restaurant-cuisine" th:text="${restaurant.cuisine}">Cuisine</span> ·
+        <span id="restaurant-region" th:text="${restaurant.region}">Region</span>
+    </p>
+    <p id="min-order-wrapper">Minimum order:
+        <strong id="min-order-amount" th:text="${#numbers.formatDecimal(restaurant.minimumOrderAmount, 1, 2)}">0.00</strong></p>
+
+    <!-- the customer sees why ordering is not possible -->
+    <p id="closed-message" th:unless="${restaurant.isOpen}">
+        This restaurant is closed. Orders are not accepted right now.
+    </p>
+
+    <div id="empty-menu-wrapper" th:if="${#lists.isEmpty(items)}"><p id="empty-menu-text">This restaurant has no items yet.</p></div>
+
+    <table id="menu-table" th:if="${!#lists.isEmpty(items)}">
+        <thead id="menu-thead">
+        <tr id="menu-header-row">
+            <th id="th-item">Item</th>
+            <th id="th-desc">Description</th>
+            <th id="th-price">Price</th>
+            <th id="th-status"></th>
+        </tr>
+        </thead>
+        <tbody id="menu-tbody">
+        <tr class="menu-row" th:each="item : ${items}">
+            <td class="td-name" th:text="${item.name}">Name</td>
+            <td class="td-desc" th:text="${item.description}">Description</td>
+            <td class="td-price" th:text="${#numbers.formatDecimal(item.price, 1, 2)}">0.00</td>
+            <!-- an unavailable item is shown but cannot be ordered -->
+            <td class="td-status" th:text="${item.available} ? '' : 'Unavailable'"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div sec:authorize="isAnonymous()" id="auth-buttons">
+        <p id="auth-text">Sign in or register to order.</p>
+        <a id="sign-in-btn" th:href="@{/login}">Sign In</a>
+        <a id="register-btn" th:href="@{/register}">Register</a>
+    </div>
+</main>
+</body>
+</html>

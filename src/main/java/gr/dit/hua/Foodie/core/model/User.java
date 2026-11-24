@@ -29,7 +29,7 @@ public class User {
 
     @NotBlank(message = "Mobile phone number cannot be blank")
     @Size(min = 10, max = 18, message = "Please provide a valid phone number")
-    @Column(name = "mobile_phone_number", nullable = false, length = 18)
+    @Column(name = "mobile_phone_number", nullable = false, length = 18,unique = true)
     private String mobilePhoneNumber;
 
     @NotBlank(message = "Password cannot be blank")

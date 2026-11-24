@@ -10,6 +10,7 @@
 </head>
 <body>
 
+    <!-- Navigation bar with authentication options. -->
     <div class="top-nav">
         <div sec:authorize="isAnonymous()" class="auth-buttons">
             <a th:href="@{/login}" class="nav-btn login-nav-btn">Sign In</a>
@@ -22,6 +23,48 @@
             </form>
         </div>
     </div>
+
+    <!-- Main content displaying the available restaurants. -->
+    <main class="container">
+        <h1>Explore Restaurants on Foodie</h1>
+        <p>Browse available restaurants below. Customers place and track orders, while owners manage their store and orders.</p>
+
+        <!-- Displays a message when no restaurants are available. -->
+        <div th:if="${#lists.isEmpty(restaurants)}">
+            <p>No restaurants available at the moment.</p>
+        </div>
+
+        <!-- Displays restaurant information in a grid layout. -->
+        <div class="restaurants-grid" th:if="${!#lists.isEmpty(restaurants)}">
+            <div th:each="restaurant : ${restaurants}" class="restaurant-card">
+                <h2 th:text="${restaurant.name}">Restaurant Name</h2>
+
+                <p>
+                    <span th:text="${restaurant.cuisine}">Cuisine</span> ·
+                    <span th:text="${restaurant.region}">Region</span>
+                </p>
+
+                <p th:text="${restaurant.address}">Address</p>
+
+                <p>
+                    Status:
+                    <strong th:text="${restaurant.isOpen} ? 'Open' : 'Closed'">Status</strong>
+                </p>
+
+                <p th:if="${restaurant.minimumOrderAmount != null}">
+                    Minimum order: <strong th:text="${restaurant.minimumOrderAmount}">0.00</strong>
+                </p>
+                <a th:href="@{/restaurants/{id}(id=${restaurant.id})}">View menu</a>
+
+                <!-- Restricts ordering options to authenticated users. -->
+                <div sec:authorize="isAnonymous()" class="order-locked">
+                    <p>Sign in or register to order.</p>
+                    <a th:href="@{/login}">Sign In</a>
+                    <a th:href="@{/register}">Register</a>
+                </div>
+            </div>
+        </div>
+    </main>
 
 </body>
 </html>

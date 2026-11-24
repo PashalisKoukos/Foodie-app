@@ -32,3 +32,11 @@ management:
     web:
       exposure:
         include: health,info
+
+foodie:
+  noc:
+    base-url: ${NOC_BASE_URL:http://localhost:8081}
+    api-token: ${NOC_API_TOKEN:}
+    connect-timeout-ms: ${NOC_CONNECT_TIMEOUT_MS:2000}
+    read-timeout-ms: ${NOC_READ_TIMEOUT_MS:3000}
+    max-get-retries: ${NOC_MAX_GET_RETRIES:2}

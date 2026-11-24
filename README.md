@@ -8,6 +8,8 @@
   <img src="https://img.shields.io/badge/PostgreSQL-Database-4169E1?logo=postgresql" />
 </p>
 
+![img.png](src/main/resources/static/img/foodie-logo.png)
+
 
 ### Prerequisites
 - Docker & Docker Compose
