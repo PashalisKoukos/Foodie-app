@@ -1,14 +1,14 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('../img/foodie_back.png') no-repeat 46% center fixed;
+    background: linear-gradient(rgba(255, 250, 242, 0.45), rgba(255, 250, 242, 0.55)), url('../img/foodie_back.png') no-repeat 46% center fixed;
     background-size: cover;
     min-height: 100vh;
     margin: 0;
-    color: #fff;
+    color: #1f1f24;
     position: relative;
 }
 
-/* Container πάνω δεξιά */
+/* Top-right navigation container */
 .top-nav {
     position: absolute;
     top: 20px;
@@ -16,9 +16,17 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+    z-index: 10;
 }
 
-/* Κοινά styles κουμπιών navigation */
+.auth-links,
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Shared navigation button styles */
 .nav-btn {
     text-decoration: none;
     padding: 9px 20px;
@@ -26,21 +34,22 @@ body {
     font-size: 14px;
     font-weight: 600;
     transition: all 0.2s ease;
+    display: inline-block;
 }
 
 .login-nav-btn {
-    background-color: transparent;
-    color: #fff;
-    border: 2px solid #fff;
+    background-color: rgba(255, 255, 255, 0.88);
+    color: #1f1f24;
+    border: 2px solid #1f1f24;
 }
 
 .login-nav-btn:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #ffffff;
 }
 
 .register-nav-btn {
     background-color: #e63946;
-    color: white;
+    color: #ffffff;
     border: 2px solid #e63946;
 }
 
@@ -49,21 +58,21 @@ body {
     border-color: #d90429;
 }
 
-/* Logout Form & Button */
+/* Logout form and button */
 .logout-form {
     margin: 0;
 }
 
 .logout-btn {
     background-color: #d90429;
-    color: white;
+    color: #ffffff;
     padding: 10px 24px;
     border: none;
     border-radius: 6px;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
@@ -73,4 +82,149 @@ body {
 
 .logout-btn:active {
     transform: scale(0.98);
+}
+
+/* Main content container */
+.container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 88px 20px 48px;
+}
+
+.container h1 {
+    margin: 0 0 10px;
+    font-size: 32px;
+    font-weight: 700;
+    color: #1b1b1f;
+}
+
+.intro-text {
+    margin: 0 0 28px;
+    color: #3a3a42;
+    font-size: 15px;
+    max-width: 720px;
+}
+
+.empty-state {
+    background-color: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(31, 31, 36, 0.12);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    color: #2b2b30;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* Restaurant grid layout */
+.restaurants-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.restaurant-card {
+    background-color: rgb(236 205 154 / 0.94);
+    border: 1px solid rgba(31, 31, 36, 0.12);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
+    backdrop-filter: blur(6px);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.restaurant-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.13);
+}
+
+.restaurant-card h2 {
+    margin: 0 0 4px;
+    font-size: 20px;
+    color: #18181b;
+}
+
+.restaurant-meta {
+    margin: 0 0 4px;
+    font-size: 14px;
+    color: #b5341b;
+    font-weight: 600;
+}
+
+.restaurant-address,
+.restaurant-info {
+    margin: 3px 0;
+    font-size: 14px;
+    color: #3f3f46;
+}
+
+.status-open {
+    color: #1f7a4c;
+}
+
+.status-closed {
+    color: #c92a2a;
+}
+
+/* Container for anonymous users */
+.order-locked {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(31, 31, 36, 0.1);
+}
+
+.order-locked p {
+    margin: 0 0 10px;
+    font-size: 13px;
+    color: #52525b;
+}
+
+.locked-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.locked-actions a {
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.locked-login-link {
+    color: #1f1f24;
+    background-color: #ffffff;
+    border: 1px solid #27272a;
+}
+
+.locked-login-link:hover {
+    background-color: #f4f4f5;
+}
+
+.locked-register-link {
+    background-color: #e63946;
+    color: #ffffff;
+    border: 1px solid #e63946;
+}
+
+.locked-register-link:hover {
+    background-color: #d90429;
+}
+
+@media (max-width: 640px) {
+    .top-nav {
+        position: static;
+        justify-content: flex-end;
+        padding: 16px 16px 0;
+    }
+
+    .container {
+        padding-top: 24px;
+    }
 }

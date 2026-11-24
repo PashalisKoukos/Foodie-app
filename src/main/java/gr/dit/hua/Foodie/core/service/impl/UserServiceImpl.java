@@ -12,9 +12,9 @@ import gr.dit.hua.Foodie.core.service.model.RegistrationRequest;
 import gr.dit.hua.Foodie.core.service.model.RegistrationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements RegistrationService {
@@ -39,7 +39,6 @@ public class UserServiceImpl implements RegistrationService {
     }
 
     @Override
-    @Transactional
     public RegistrationResult register(RegistrationRequest request) {
         // Έλεγχοι μοναδικότητας
         if (userRepository.existsByUsername(request.username())) {
@@ -74,16 +73,23 @@ public class UserServiceImpl implements RegistrationService {
             return RegistrationResult.failure("Mobile phone number already exists!");
         }
 
-
+        // The normalized E.164 number is the one that gets stored
         User user = new User(
                 request.username(),
                 request.email(),
-                request.mobilePhoneNumber(),
+                e164Phone, // request.mobilePhoneNumber()
                 passwordEncoder.encode(request.rawPassword()),
                 Role.CUSTOMER
         );
 
-        userRepository.save(user);
+        try {
+            // saveAndFlush sends the INSERT now, so a duplicate caught only by the
+            // UNIQUE constraints (two simultaneous registrations) fails here
+            userRepository.saveAndFlush(user);
+        } catch (DataIntegrityViolationException e) {
+            LOGGER.warn("Registration rejected by a database constraint for user {}", request.username());
+            return RegistrationResult.failure("Username, email or phone number already exists!");
+        }
         // NOT CHARGE - COMMENT OUT
 //        try {
 //            final boolean sent = smsNotificationPort.sendSms(e164Phone, "Your account on Foodie-App was successfully created.");

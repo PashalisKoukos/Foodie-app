@@ -1,0 +1,269 @@
+/* ================================
+   General page styling
+================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(rgba(255, 250, 242, 0.45), rgba(255, 250, 242, 0.55)), url('../img/foodie_back.png') no-repeat 46% center fixed;
+    color: #333;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+/* ================================
+   Main container
+================================ */
+
+#main-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 35px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07);
+}
+
+/* ================================
+   Back navigation link
+================================ */
+
+#back-link {
+    display: inline-block;
+    margin-bottom: 25px;
+    color: #d97736;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+#back-link:hover {
+    color: #a94f1e;
+    text-decoration: underline;
+}
+
+/* ================================
+   Restaurant information
+================================ */
+
+#restaurant-title {
+    font-size: 32px;
+    color: #292929;
+    margin-bottom: 12px;
+}
+
+#restaurant-meta {
+    color: #777;
+    font-size: 15px;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+#min-order-wrapper {
+    color: #777;
+    font-size: 15px;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+/* Highlight minimum order amount */
+
+#min-order-amount {
+    color: #d97736;
+    font-size: 17px;
+}
+
+/* Restaurant closed message */
+
+#closed-message {
+    background-color: #fff0ed;
+    color: #c0392b !important;
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-weight: 600;
+}
+
+/* ================================
+   Empty menu message
+================================ */
+
+#empty-menu-wrapper {
+    margin-top: 25px;
+}
+
+#empty-menu-text {
+    background-color: #fff8ed;
+    color: #91652e;
+    padding: 18px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* ================================
+   Menu table
+================================ */
+
+#menu-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+/* Table header */
+
+#menu-thead {
+    background-color: #d97736;
+    color: #ffffff;
+}
+
+#menu-header-row th {
+    padding: 17px 15px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+/* Table body */
+
+#menu-tbody td {
+    padding: 17px 15px;
+    border-bottom: 1px solid #eeeeee;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Highlight item names */
+
+.td-name {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Highlight prices */
+
+.td-price {
+    font-weight: 700;
+    color: #d97736;
+    white-space: nowrap;
+}
+
+/* Alternate row backgrounds */
+
+#menu-tbody tr:nth-child(even) {
+    background-color: #faf8f5;
+}
+
+/* Hover effect on menu items */
+
+.menu-row {
+    transition: background-color 0.2s ease;
+}
+
+.menu-row:hover {
+    background-color: #fff0e5;
+}
+
+/* Remove the border from the last row */
+
+#menu-tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ================================
+   Authentication buttons
+================================ */
+
+#auth-buttons {
+    margin-top: 30px;
+    text-align: center;
+    padding: 22px;
+    background-color: #fff8f2;
+    border: 1px solid #f2dfd0;
+    border-radius: 10px;
+}
+
+#auth-buttons p {
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* Style both buttons */
+#auth-buttons a {
+    display: inline-block;
+    padding: 12px 25px;
+    margin: 5px;
+    background-color: #d97736;
+    color: white;
+    text-decoration: none;
+    border-radius: 7px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect */
+#auth-buttons a:hover {
+    background-color: #b85e27;
+    transform: translateY(-2px);
+}
+
+/* ================================
+   Responsive design
+================================ */
+
+@media (max-width: 768px) {
+
+    body {
+        padding: 20px 10px;
+    }
+
+    #main-container {
+        padding: 20px 15px;
+    }
+
+    #restaurant-title {
+        font-size: 26px;
+    }
+
+    /* Allow horizontal scrolling on smaller screens */
+    #menu-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    #menu-header-row th,
+    #menu-tbody td {
+        padding: 13px 12px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    body {
+        padding: 12px 8px;
+    }
+
+    #main-container {
+        padding: 18px 12px;
+        border-radius: 10px;
+    }
+
+    #restaurant-title {
+        font-size: 23px;
+    }
+
+    #auth-buttons a {
+        display: block;
+        margin: 10px 0;
+    }
+}

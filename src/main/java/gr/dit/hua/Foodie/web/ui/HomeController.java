@@ -1,15 +1,22 @@
 package gr.dit.hua.Foodie.web.ui;
 
+import gr.dit.hua.Foodie.core.service.RestaurantService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-// Shows the home page. "/" is public, and "/home" is where the user
-// lands after a successful login (see SecurityConfig).
 @Controller
 public class HomeController {
 
+    private final RestaurantService restaurantService;
+
+    public HomeController(final RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+    }
+
     @GetMapping({"/", "/home"})
-    public String home() {
-        return "home"; // renders templates/customer_page.html
+    public String home(final Model model) {
+        model.addAttribute("restaurants", restaurantService.getAllRestaurants());
+        return "home";
     }
 }
