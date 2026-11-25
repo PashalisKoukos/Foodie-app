@@ -72,6 +72,8 @@ public class OrderServiceImpl implements OrderService {
         ArrayList<OrderItem> items = new ArrayList<>();
         for (Long itemId : itemIds) {
             RestaurantItem item = itemRepository.findById(itemId).orElseThrow(()->new IllegalArgumentException("Item not found"));
+            //BR4: an unavailable item cannot be ordered
+            if (!item.isAvailable()) throw new RuntimeException("Item not available: " + item.getName());
             // FIX: quantity is 1 for now, because itemIds has no quantities.
             // The price is copied into the line, so later menu price changes do not affect this order.
             items.add(new OrderItem(item, 1, item.getPrice()));
@@ -144,7 +146,8 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderView updateOrderStatus(int orderId, OrderStatus newStatus) {
         Order order = orderRepository.findById((long) orderId).orElseThrow(() -> new RuntimeException("Order not found"));
-
+        // BR3 and BR5: only legal status changes
+        if (!order.getStatus().canTransitionTo(newStatus)) throw  new RuntimeException("Illegal status change from " + order.getStatus() + " to " + newStatus);
         order.setStatus(newStatus);
         Order updatedOrder = orderRepository.save(order);
 
