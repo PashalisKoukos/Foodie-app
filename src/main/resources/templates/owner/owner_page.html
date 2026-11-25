@@ -8,17 +8,58 @@
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="icon" type="image/png" th:href="@{/img/ico.png}" />
 </head>
-<body>
 
-    <div class="top-nav">
-        <div sec:authorize="isAuthenticated()" class="user-menu">
-            <form th:action="@{/logout}" method="post" class="logout-form">
-                <button type="submit" class="logout-btn">Sign Out</button>
-            </form>
+    <!-- TODO διαχείριση μενού/τιμών/διαθεσιμότητας, αποδοχή/απόρριψη και ενημέρωση παραγγελιών-->
+    <body>
+        <!-- HEADER -->
+
+        <h1>Foodie - Owner Panel</h1>
+        <div class="top-nav">
+            <div sec:authorize="isAuthenticated()" class="user-menu">
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="logout-btn">Sign Out</button>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <h1>Owner Home</h1>
+        <!-- MAIN CONTENT -->
+        <main>
 
-</body>
+            <!-- MANAGEMENT OPTIONS -->
+            <section>
+                <h3>Restaurant Management</h3>
+                <div>
+                    <h4>Menu </h4>
+                    <p>Manage your restaurant's menu and products.</p>  <!-- Add product to the menu/ Delete product from the menu-->
+                    <a th:href="@{/owner/menu}">Manage Menu</a>
+                </div>
+
+                <div>
+                    <h4>Prices</h4>
+                    <p>Update the prices of your products.</p>
+                    <a th:href="@{/owner/menu}">Manage Prices</a>
+                </div>
+
+                <div>
+                    <h4>Availability</h4>
+                    <p>Manage the availability of your products.</p>
+                    <a th:href="@{/owner/menu}">Manage Availability</a> <!-- Change the restaraunt item availability(available/unavailable) -->
+                </div>
+
+            </section>
+
+
+            <!-- ORDER MANAGEMENT -->
+            <section>
+                <h3>Order Management</h3>
+                <div>
+                    <h4>Orders</h4>
+                    <p>View and manage customer orders.</p>
+                    <a th:href="@{/owner/orders}">View Orders</a>
+                </div>
+            </section>
+
+        </main>
+
+    </body>
 </html>
