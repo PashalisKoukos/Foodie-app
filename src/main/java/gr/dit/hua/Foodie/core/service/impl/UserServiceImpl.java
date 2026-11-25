@@ -8,6 +8,7 @@ import gr.dit.hua.Foodie.core.port.SmsNotificationPort;
 import gr.dit.hua.Foodie.core.port.dto.PhoneNumberValidationResult;
 import gr.dit.hua.Foodie.core.repository.UserRepository;
 import gr.dit.hua.Foodie.core.service.RegistrationService;
+import gr.dit.hua.Foodie.core.service.UserService;
 import gr.dit.hua.Foodie.core.service.model.RegistrationRequest;
 import gr.dit.hua.Foodie.core.service.model.RegistrationResult;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements RegistrationService {
+public class UserServiceImpl implements RegistrationService , UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class) ;
 
@@ -70,7 +71,7 @@ public class UserServiceImpl implements RegistrationService {
 //        }
 
         //if (phoneValidation == null || !phoneValidation.isValidMobile()) {
-            //return RegistrationResult.failure("Invalid mobile phone number!");
+        //return RegistrationResult.failure("Invalid mobile phone number!");
         //}
 
         final String e164Phone = (phoneValidation.e164() != null && !phoneValidation.e164().isBlank())
@@ -79,7 +80,7 @@ public class UserServiceImpl implements RegistrationService {
 
         // Έλεγχoς μοναδικότητας και για το κανονικοποιημένο e164Phone:
         //if (!e164Phone.equals(request.mobilePhoneNumber()) && userRepository.existsByMobilePhoneNumber(e164Phone)) {
-            //return RegistrationResult.failure("Mobile phone number already exists!");
+        //return RegistrationResult.failure("Mobile phone number already exists!");
         //}
 
         // The normalized E.164 number is the one that gets stored
@@ -120,5 +121,12 @@ public class UserServiceImpl implements RegistrationService {
 //        }
 
         return RegistrationResult.success();
+    }
+
+    @Override
+    public Long getUserIdByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalStateException("Customer not found: " + username))
+                .getId();
     }
 }

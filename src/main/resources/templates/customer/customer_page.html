@@ -10,95 +10,132 @@
 </head>
 <body>
 
-    <div class="top-nav">
-        <div sec:authorize="isAuthenticated()" class="user-menu">
-            <form th:action="@{/logout}" method="post" class="logout-form">
-                <button type="submit" class="logout-btn">Sign Out</button>
-            </form>
+<div class="top-nav">
+    <div sec:authorize="!isAuthenticated()" class="auth-links">
+        <a th:href="@{/login}" class="nav-btn login-nav-btn">Login</a>
+        <a th:href="@{/register}" class="nav-btn register-nav-btn">Register</a>
+    </div>
+
+    <div sec:authorize="isAuthenticated()" class="user-menu">
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit" class="logout-btn">Sign Out</button>
+        </form>
+    </div>
+</div>
+
+<main class="container">
+    <p class="intro-text"
+       th:text="${selectedRestaurant == null} ? 'Browse Available Restaurants Below.' : 'Browse the Available Products Below.'">
+        Browse available restaurants below.
+    </p>
+
+    <!-- Restaurants list (untouched) -->
+    <div th:if="${selectedRestaurant == null}">
+        <div th:if="${#lists.isEmpty(restaurants)}" class="empty-state">
+            <p>No restaurants available at the moment.</p>
+        </div>
+
+        <div class="restaurants-grid" th:if="${!#lists.isEmpty(restaurants)}">
+            <div th:each="restaurant : ${restaurants}" class="restaurant-card">
+                <h2 th:text="${restaurant.name}">Restaurant Name</h2>
+
+                <p class="restaurant-meta">
+                    <span th:text="${restaurant.cuisine}">Cuisine</span> ·
+                    <span th:text="${restaurant.region}">Region</span>
+                </p>
+
+                <p class="restaurant-address" th:text="${restaurant.address}">Address</p>
+
+                <p class="restaurant-info">
+                    Status:
+                    <strong th:class="${restaurant.isOpen} ? 'status-open' : 'status-closed'"
+                            th:text="${restaurant.isOpen} ? 'Open' : 'Closed'">Status</strong>
+                </p>
+
+                <p class="restaurant-info" th:if="${restaurant.minimumOrderAmount != null}">
+                    Minimum order:
+                    <strong th:text="${#numbers.formatDecimal(restaurant.minimumOrderAmount, 1, 2)}">0.00</strong>
+                </p>
+
+                <a th:href="@{/customer/customer_page(restaurantId=${restaurant.id})}">View menu</a>
+            </div>
         </div>
     </div>
 
-    <main class="container">
-        <p class="intro-text"
-           th:text="${selectedRestaurant == null} ? 'Browse Available Restaurants Below.' : 'Browse the Available Products Below.'">
-            Browse available restaurants below.
+    <!-- Selected restaurant menu list + direct order form -->
+    <div th:if="${selectedRestaurant != null}">
+        <a th:href="@{/customer/customer_page}">Back To Restaurants</a>
+
+        <h2 th:text="${selectedRestaurant.name} + ' - Menu'">Restaurant Menu</h2>
+
+        <p th:unless="${selectedRestaurant.isOpen}">
+            This restaurant is closed. Orders are not accepted right now.
         </p>
 
-        <!-- Λίστα καταστημάτων -->
-        <div th:if="${selectedRestaurant == null}">
-            <div th:if="${#lists.isEmpty(restaurants)}" class="empty-state">
-                <p>No restaurants available at the moment.</p>
-            </div>
-
-            <div class="restaurants-grid" th:if="${!#lists.isEmpty(restaurants)}">
-                <div th:each="restaurant : ${restaurants}" class="restaurant-card">
-                    <h2 th:text="${restaurant.name}">Restaurant Name</h2>
-
-                    <p class="restaurant-meta">
-                        <span th:text="${restaurant.cuisine}">Cuisine</span> ·
-                        <span th:text="${restaurant.region}">Region</span>
-                    </p>
-
-                    <p class="restaurant-address" th:text="${restaurant.address}">Address</p>
-
-                    <p class="restaurant-info">
-                        Status:
-                        <strong th:text="${restaurant.isOpen} ? 'Open' : 'Closed'">Status</strong>
-                    </p>
-
-                    <p class="restaurant-info" th:if="${restaurant.minimumOrderAmount != null}">
-                        Minimum order:
-                        <strong th:text="${#numbers.formatDecimal(restaurant.minimumOrderAmount, 1, 2)}">0.00</strong>
-                    </p>
-
-                    <a th:href="@{/customer/customer_page(restaurantId=${restaurant.id})}">View menu</a>
-                </div>
-            </div>
+        <div th:if="${errorMessage != null}" class="error-banner" th:text="${errorMessage}">
+            Order error
         </div>
 
-        <!-- Μενού επιλεγμένου καταστήματος -->
-        <div th:if="${selectedRestaurant != null}">
-            <a th:href="@{/customer/customer_page}">Back To Restaurants</a>
-
-            <h2 th:text="${selectedRestaurant.name} + ' - Menu'">Restaurant Menu</h2>
-
-            <p th:unless="${selectedRestaurant.isOpen}">
-                This restaurant is closed. Orders are not accepted right now.
-            </p>
-
-            <div th:if="${#lists.isEmpty(menuItems)}" class="empty-state">
-                <p>This restaurant has no items yet.</p>
-            </div>
-
-            <div class="restaurants-grid" th:if="${!#lists.isEmpty(menuItems)}">
-                <div th:each="item : ${menuItems}"
-                     class="restaurant-card menu-item"
-                     th:attr="data-item-id=${item.id}, data-item-name=${item.name}, data-available=${item.available}"
-                     onclick="if(this.dataset.available === 'true') toggleItemSelection(this)">
-                    <h2 th:text="${item.name}">Item Name</h2>
-                    <p class="restaurant-address" th:text="${item.description}">Description</p>
-                    <p class="restaurant-info">
-                        <strong th:text="${#numbers.formatDecimal(item.price, 1, 2)} + ' €'">0.00 €</strong>
-                    </p>
-                    <p class="restaurant-info" th:unless="${item.available}">
-                        <strong>Unavailable</strong>
-                    </p>
-                </div>
-            </div>
-
-            <p id="selectionInfo"></p>
-
-            <!-- Μόνιμο / σταθερό κουμπί κάτω -->
-            <button type="button"
-                    id="addToCartBtn"
-                    onclick="onAddToYourCartClick()"
-                    style="position: fixed; bottom: 20px; right: 20px; z-index: 100;">
-                Add to your cart
-            </button>
+        <div th:if="${successMessage != null}" class="success-banner" th:text="${successMessage}">
+            Order placed
         </div>
-    </main>
 
-    <!-- <script th:src="@{/Customer_Page.js}"></script> -->
+        <div th:if="${#lists.isEmpty(menuItems)}" class="empty-state">
+            <p>This restaurant has no items yet.</p>
+        </div>
+
+        <form th:if="${!#lists.isEmpty(menuItems)}" th:action="@{/customer/order}" method="post" id="orderForm">
+            <input type="hidden" name="restaurantId" th:value="${selectedRestaurant.id}" />
+
+            <ul class="menu-list" id="menuList">
+                <li th:each="item : ${menuItems}"
+                    class="menu-list-item"
+                    th:classappend="${!item.available} ? ' unavailable'"
+                    th:attr="data-item-id=${item.id}, data-item-name=${item.name}, data-item-price=${item.price}, data-available=${item.available}">
+                    <div class="menu-item-main">
+                        <input type="checkbox"
+                               name="itemIds"
+                               class="item-checkbox"
+                               th:value="${item.id}"
+                               th:disabled="${!item.available}"
+                               aria-label="Select item" />
+                        <div class="menu-item-text">
+                            <h3 th:text="${item.name}">Item Name</h3>
+                            <p class="menu-item-desc" th:text="${item.description}">Description</p>
+                        </div>
+                    </div>
+
+                    <div class="menu-item-side">
+                                <span class="menu-item-price"
+                                      th:text="${#numbers.formatDecimal(item.price, 1, 2)} + ' €'">0.00 €</span>
+                        <span class="unavailable-tag" th:unless="${item.available}">Unavailable</span>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="order-options">
+                <label for="orderType">Order Type:</label>
+                <select id="orderType" name="orderType">
+                    <option value="PICKUP">Pickup</option>
+                    <option value="DELIVERY">Delivery</option>
+                </select>
+
+                <input type="text"
+                       id="deliveryAddress"
+                       name="deliveryAddress"
+                       placeholder="Delivery address (if delivery)" />
+            </div>
+
+            <p id="selectionInfo" class="selection-info"></p>
+
+            <div class="cart-action-bar">
+                <button type="submit" id="placeOrderBtn">Place Order</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script th:src="@{/js/customer_Page.js}"></script>
 
 </body>
 </html>

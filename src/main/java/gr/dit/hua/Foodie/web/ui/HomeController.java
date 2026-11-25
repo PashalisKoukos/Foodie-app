@@ -1,6 +1,5 @@
 package gr.dit.hua.Foodie.web.ui;
 
-import gr.dit.hua.Foodie.core.service.RestaurantService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

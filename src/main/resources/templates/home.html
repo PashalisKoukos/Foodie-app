@@ -59,7 +59,7 @@
                 <!-- Restricts ordering options to authenticated users. -->
                 <div sec:authorize="isAnonymous()" class="order-locked">
                     <p>Sign in or register to order.</p>
-                    <a th:href="@{/login}">Sign In</a>
+                    <a th:href="@{/login}">Sign In</a> <br>
                     <a th:href="@{/register}">Register</a>
                 </div>
             </div>

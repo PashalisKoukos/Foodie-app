@@ -1,7 +1,6 @@
 package gr.dit.hua.Foodie.web.ui;
 
 import gr.dit.hua.Foodie.core.service.RestaurantItemService;
-import gr.dit.hua.Foodie.core.service.RestaurantService;
 import gr.dit.hua.Foodie.core.service.model.RestaurantView;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
