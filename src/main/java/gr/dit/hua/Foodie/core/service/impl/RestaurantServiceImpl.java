@@ -1,5 +1,4 @@
 package gr.dit.hua.Foodie.core.service.impl;
-
 import gr.dit.hua.Foodie.core.model.Restaurant;
 import gr.dit.hua.Foodie.core.repository.RestaurantRepository;
 import gr.dit.hua.Foodie.core.service.RestaurantService;

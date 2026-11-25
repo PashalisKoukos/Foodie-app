@@ -2,7 +2,6 @@ package gr.dit.hua.Foodie.core.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
@@ -19,12 +18,12 @@ public class Order {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne // One customer can exist in multiple orders
+    @ManyToOne(fetch = FetchType.LAZY) // One customer can exist in multiple orders
     @JoinColumn(name = "customer_id", nullable = false)
     @NotNull
     private User customer;
 
-    @ManyToOne // One restaurant can exist in multiple orders
+    @ManyToOne(fetch = FetchType.LAZY) // One restaurant can exist in multiple orders
     @JoinColumn(name = "restaurant_id", nullable = false)
     @NotNull
     private Restaurant restaurant;
@@ -34,6 +33,7 @@ public class Order {
     private List<OrderItem> items = new ArrayList<>();
 
     @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+    @NotNull
     private BigDecimal totalPrice;
 
     @CreationTimestamp
@@ -41,11 +41,11 @@ public class Order {
     private Instant createdAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="status",nullable = false)
+    @Column(name = "status", nullable = false)
     @NotNull
     private OrderStatus status;
 
-    @Column(name="deliveryAddress")
+    @Column(name = "delivery_address", length = 255)
     private String deliveryAddress;
 
     @NotNull
@@ -60,35 +60,18 @@ public class Order {
                  BigDecimal totalPrice, OrderStatus status, String deliveryAddress, OrderType orderType) {
         this.customer = customer;
         this.restaurant = restaurant;
-        this.items = items;
         this.totalPrice = totalPrice;
         this.status = status;
         this.deliveryAddress = deliveryAddress;
         this.orderType = orderType;
+        if (items != null) {
+            items.forEach(this::addItem);
+        }
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public User getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(User customer) {
-        this.customer = customer;
-    }
-
-    public String getDeliveryAddress() {
-        return deliveryAddress;
-    }
-
-    public void setDeliveryAddress(String deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
+    public void addItem(OrderItem item) {
+        items.add(item);
+        item.setOrder(this);
     }
 
     public int getId() {
@@ -99,21 +82,12 @@ public class Order {
         this.id = id;
     }
 
-    public void addItem(OrderItem item) {
-        items.add(item);
-        item.setOrder(this);
+    public User getCustomer() {
+        return customer;
     }
 
-    public List<OrderItem> getItems() {
-        return items;
-    }
-
-    public OrderType getOrderType() {
-        return orderType;
-    }
-
-    public void setOrderType(OrderType orderType) {
-        this.orderType = orderType;
+    public void setCustomer(User customer) {
+        this.customer = customer;
     }
 
     public Restaurant getRestaurant() {
@@ -124,12 +98,15 @@ public class Order {
         this.restaurant = restaurant;
     }
 
-    public OrderStatus getStatus() {
-        return status;
+    public List<OrderItem> getItems() {
+        return items;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
+    public void setItems(List<OrderItem> items) {
+        this.items.clear();
+        if (items != null) {
+            items.forEach(this::addItem);
+        }
     }
 
     public BigDecimal getTotalPrice() {
@@ -140,7 +117,35 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public void setItems(List<OrderItem> items) {
-        this.items = items;
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public OrderType getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(OrderType orderType) {
+        this.orderType = orderType;
     }
 }
