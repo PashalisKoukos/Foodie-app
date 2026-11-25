@@ -8,6 +8,7 @@ body {
     position: relative;
 }
 
+
 /* Top-right navigation container */
 .top-nav {
     position: absolute;
@@ -228,3 +229,27 @@ body {
         padding-top: 24px;
     }
 }
+/* Fixed bottom-center Add to your cart button */
+#addToCartBtn {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    padding: 14px 32px;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 10px;
+    border: 2px solid #1b1b1f;
+    background-color: #e63946;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+#addToCartBtn:hover {
+    background-color: #d90429;
+    transform: translateX(-50%) translateY(-2px);
+}
+

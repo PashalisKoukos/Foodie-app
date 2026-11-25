@@ -51,27 +51,36 @@ public class UserServiceImpl implements RegistrationService {
             return RegistrationResult.failure("Mobile phone number already exists!");
         }
 
-        // Έλεγχος κινητού & κανονικοποίηση σε E.164
-        final PhoneNumberValidationResult phoneValidation;
-        try {
-            phoneValidation = phoneNumberPort.validate(request.mobilePhoneNumber());
-        } catch (Exception e) {
-            LOGGER.error("Failed to validate mobile phone number for user {}", request.username(), e);
-            return RegistrationResult.failure("Could not validate mobile phone number!");
-        }
+        // Προσωρινή παράκαμψη NOC phone validation για τοπικό test
+        final PhoneNumberValidationResult phoneValidation =
+                new PhoneNumberValidationResult(
+                        request.mobilePhoneNumber(),
+                        true,
+                        "MOBILE",
+                        request.mobilePhoneNumber()
+                );
 
-        if (phoneValidation == null || !phoneValidation.isValidMobile()) {
-            return RegistrationResult.failure("Invalid mobile phone number!");
-        }
+        // Έλεγχος κινητού & κανονικοποίηση σε E.164
+//        final PhoneNumberValidationResult phoneValidation;
+//        try {
+//            phoneValidation = phoneNumberPort.validate(request.mobilePhoneNumber());
+//        } catch (Exception e) {
+//            LOGGER.error("Failed to validate mobile phone number for user {}", request.username(), e);
+//            return RegistrationResult.failure("Could not validate mobile phone number!");
+//        }
+
+        //if (phoneValidation == null || !phoneValidation.isValidMobile()) {
+            //return RegistrationResult.failure("Invalid mobile phone number!");
+        //}
 
         final String e164Phone = (phoneValidation.e164() != null && !phoneValidation.e164().isBlank())
                 ? phoneValidation.e164()
                 : request.mobilePhoneNumber();
 
         // Έλεγχoς μοναδικότητας και για το κανονικοποιημένο e164Phone:
-        if (!e164Phone.equals(request.mobilePhoneNumber()) && userRepository.existsByMobilePhoneNumber(e164Phone)) {
-            return RegistrationResult.failure("Mobile phone number already exists!");
-        }
+        //if (!e164Phone.equals(request.mobilePhoneNumber()) && userRepository.existsByMobilePhoneNumber(e164Phone)) {
+            //return RegistrationResult.failure("Mobile phone number already exists!");
+        //}
 
         // The normalized E.164 number is the one that gets stored
         User user = new User(
@@ -90,7 +99,7 @@ public class UserServiceImpl implements RegistrationService {
             LOGGER.warn("Registration rejected by a database constraint for user {}", request.username());
             return RegistrationResult.failure("Username, email or phone number already exists!");
         }
-        // NOT CHARGE - COMMENT OUT
+
 //        try {
 //            final boolean sent = smsNotificationPort.sendSms(e164Phone, "Your account on Foodie-App was successfully created.");
 //            if (!sent) {
@@ -99,7 +108,7 @@ public class UserServiceImpl implements RegistrationService {
 //        } catch (Exception e) {
 //            LOGGER.error("Failed to send welcome SMS to user {} ({})", user.getUsername(), e164Phone, e);
 //        }
-
+//
 //        try {
 //            emailNotificationPort.sendEmail(
 //                    user.getEmail(),
