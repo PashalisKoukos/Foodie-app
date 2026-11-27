@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" th:href="@{../static/img/ico.png}"/>
+    <title>Foodie - Manage Orders</title>
+    <style>
+        :root {
+            --bg: #f6f7fb;
+            --surface: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --primary: #ea580c;
+            --primary-hover: #c2410c;
+            --border: #e5e7eb;
+            --success-bg: #ecfdf5;
+            --success-text: #065f46;
+            --error-bg: #fef2f2;
+            --error-text: #991b1b;
+            --radius: 12px;
+            --shadow: 0 4px 14px rgba(17, 24, 39, 0.06);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(rgba(255, 250, 242, 0.55), rgba(255, 250, 242, 0.68)), url('/img/foodie_back.png') no-repeat 46% center fixed;
+            color: var(--text);
+            padding: 28px 20px 60px;
+        }
+
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 22px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 0.92rem;
+            margin-top: 2px;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .alert-error {
+            background: var(--error-bg);
+            color: var(--error-text);
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .card h3 {
+            margin-bottom: 14px;
+            font-size: 1.1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        select {
+            padding: 7px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.88rem;
+            background: #fff;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .btn-accept {
+            background: #16a34a;
+        }
+
+        .btn-accept:hover {
+            background: #15803d;
+        }
+
+        .btn-reject {
+            background: #dc2626;
+        }
+
+        .btn-reject:hover {
+            background: #b91c1c;
+        }
+
+        .btn-update {
+            background: var(--primary);
+        }
+
+        .btn-update:hover {
+            background: var(--primary-hover);
+        }
+
+        .inline-form {
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+            margin-right: 6px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: #f3f4f6;
+            color: #374151;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div>
+            <h2>Order Management</h2>
+            <div class="subtitle" th:if="${restaurant != null}" th:text="${restaurant.name()}">Restaurant</div>
+        </div>
+        <a th:href="@{/owner/owner_page}" class="back-link">← Back to Owner Panel</a>
+    </header>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+    <div class="card">
+        <h3>Current Orders</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.id()}">1</td>
+                <td th:text="${order.orderType()}">DELIVERY</td>
+                <td><span class="status-badge" th:text="${order.status()}">PENDING</span></td>
+                <td th:text="${order.totalPrice()}">0.00</td>
+                <td>
+                    <form method="post" th:action="@{/owner/orders/{id}/accept(id=${order.id()})}" class="inline-form">
+                        <button type="submit" class="btn btn-accept">Accept</button>
+                    </form>
+
+                    <form method="post" th:action="@{/owner/orders/{id}/reject(id=${order.id()})}" class="inline-form">
+                        <button type="submit" class="btn btn-reject">Reject</button>
+                    </form>
+
+                    <form method="post" th:action="@{/owner/orders/{id}/status(id=${order.id()})}" class="inline-form">
+                        <select name="status">
+                            <option value="PREPARING">PREPARING</option>
+                            <option value="READY">READY</option>
+                            <option value="DELIVERING">DELIVERING</option>
+                        </select>
+                        <button type="submit" class="btn btn-update">Update</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(orders)}">
+                <td colspan="5" style="color: #6b7280;">No current orders to display.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
