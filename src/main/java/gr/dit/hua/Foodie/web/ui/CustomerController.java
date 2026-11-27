@@ -3,6 +3,7 @@ package gr.dit.hua.Foodie.web.ui;
 import gr.dit.hua.Foodie.core.model.OrderType;
 import gr.dit.hua.Foodie.core.service.OrderService;
 import gr.dit.hua.Foodie.core.service.RestaurantItemService;
+import gr.dit.hua.Foodie.core.service.RestaurantService;
 import gr.dit.hua.Foodie.core.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
