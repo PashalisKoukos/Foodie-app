@@ -19,24 +19,25 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * Security configuration.
+ * Security configuration separating stateless JWT API traffic from stateful UI sessions.
  */
-
-
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity // Enables @Preauthorize
+@EnableMethodSecurity // Enables @PreAuthorize
 public class SecurityConfig {
 
+    private final AuthSuccessHandler authSuccessHandler;
+
+    public SecurityConfig(final AuthSuccessHandler authSuccessHandler) {
+        this.authSuccessHandler = authSuccessHandler;
+    }
+
     /**
-     * API chain {@code "/api/**"} (stateless, JWT).
+     * API chain {@code "/api/v1/**"} (stateless, JWT).
      */
     @Bean
     @Order(1)
-    public SecurityFilterChain apiChain(final HttpSecurity http,
-                                        final JwtAuthenticationFilter jwtAuthenticationFilter,
-                                        final RestApiAuthenticationEntryPoint restApiAuthenticationEntryPoint,
-                                        final RestApiAccessDeniedHandler restApiAccessDeniedHandler) throws Exception {
+    public SecurityFilterChain apiChain(final HttpSecurity http, final JwtAuthenticationFilter jwtAuthenticationFilter, final RestApiAuthenticationEntryPoint restApiAuthenticationEntryPoint, final RestApiAccessDeniedHandler restApiAccessDeniedHandler) throws Exception {
         http
                 .securityMatcher("/api/v1/**")
                 .csrf(AbstractHttpConfigurer::disable)
@@ -52,68 +53,26 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable);
+
         return http.build();
     }
 
     /**
-     * UI chain {@code "/**"} (stateful, cookie based).
+     * UI chain {@code "/**"} (stateful, cookie-based).
      */
     @Bean
     @Order(2)
     public SecurityFilterChain uiChain(final HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/**")
-                // Το αφήνουμε ως σχόλιο προσωρινά... TODO configure.
-                // .csrf(csrf -> csrf.ignoringRequestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**"))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/home", "/login", "/register", "/error").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
-                        .requestMatchers("/", "/login", "/register").permitAll() // Public
-                        .requestMatchers("/profile", "/logout").authenticated() // Private
-                        .anyRequest().permitAll() // the rest
-                )
-                .formLogin(form -> form
-                        .loginPage("/login") // custom login page (see login.html)
-                        .loginProcessingUrl("/login") // POST request target (handled by Spring Security)
-                        .defaultSuccessUrl("/profile", true)
-                        .failureUrl("/login?error")
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout") // POST request target (handled by Spring Security)
-                        .logoutSuccessUrl("/login?logout")
-                        .deleteCookies("JSESSIONID")
-                        .invalidateHttpSession(true)
-                        .permitAll()
-                )
-                .httpBasic(AbstractHttpConfigurer::disable);
-
-        return http.build();
-    }
-
-    // Login Security :
-    private final AuthSuccessHandler authSuccessHandler;
-
-    public SecurityConfig(final AuthSuccessHandler authSuccessHandler) {
-        this.authSuccessHandler = authSuccessHandler;
-    }
-
-    // Configures the password encoder using BCrypt.
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    // Configures HTTP security, access permissions, login and logout.
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/home", "/register", "/login", "/css/**", "/js/**", "/img/**","/error").permitAll()
-                        .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers("/diagnostics").permitAll()
+                        .requestMatchers("/actuator/health", "/diagnostics").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/restaurants/**").permitAll()
                         .requestMatchers("/owner/**").hasRole("OWNER")
                         .requestMatchers("/customer/**").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.GET, "/restaurants/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -124,13 +83,22 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(logout -> logout
+                        .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .deleteCookies("JSESSIONID")
                         .invalidateHttpSession(true)
-                        // Allows all users to access the logout endpoint.
                         .permitAll()
-                );
+                )
+                .httpBasic(AbstractHttpConfigurer::disable);
 
         return http.build();
+    }
+
+    /**
+     * Configures the password encoder using BCrypt.
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
