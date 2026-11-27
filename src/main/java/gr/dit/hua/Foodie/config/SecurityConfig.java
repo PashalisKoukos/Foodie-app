@@ -74,7 +74,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login") // custom login page (see login.html)
                         .loginProcessingUrl("/login") // POST request target (handled by Spring Security)
-                        .defaultSuccessUrl("/profile", true)
+                        .successHandler(authSuccessHandler)
                         .failureUrl("/login?error")
                         .permitAll()
                 )
