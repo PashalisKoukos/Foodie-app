@@ -1,5 +1,6 @@
 package gr.dit.hua.Foodie.core.security;
 
+import gr.dit.hua.Foodie.core.model.Role;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -25,5 +26,15 @@ public final class CurrentUserProvider {
             ));
         }
         return Optional.empty();
+    }
+
+    public CurrentUser requireCurrentUser() {
+        return this.getCurrentUser().orElseThrow(() -> new SecurityException("not authenticated"));
+    }
+
+    public long requiredOwnerId() {
+        final var currentUser = this.requireCurrentUser();
+        if (currentUser.role() != Role.OWNER) throw new SecurityException("Student type/role required");
+        return currentUser.userId();
     }
 }

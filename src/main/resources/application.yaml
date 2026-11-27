@@ -40,3 +40,11 @@ foodie:
     connect-timeout-ms: ${NOC_CONNECT_TIMEOUT_MS:2000}
     read-timeout-ms: ${NOC_READ_TIMEOUT_MS:3000}
     max-get-retries: ${NOC_MAX_GET_RETRIES:2}
+
+# Custom Application Properties.
+app:
+  jwt:
+    issuer: "FoodieApp - api"
+    audience: "external-systems"
+    secret: "${JWT_SECRET}" # openssl rand -base64 32
+    ttl-minutes: 60
