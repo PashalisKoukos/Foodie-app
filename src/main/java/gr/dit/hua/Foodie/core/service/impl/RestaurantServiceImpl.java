@@ -101,6 +101,12 @@ public class RestaurantServiceImpl implements RestaurantService {
         return Optional.empty();
     }
 
+    /**
+     * Retrieves a restaurant by its unique identifier and converts it into a view object.
+     *
+     * @param restaurantId the ID of the restaurant to retrieve
+     * @return an {@link Optional} containing the {@link RestaurantView} if found, or an empty {@link Optional} otherwise
+     */
     @Override
     public Optional<RestaurantView> getRestaurantById(Long restaurantId) {
         Optional<Restaurant> restaurantOpt = restaurantRepository.findById(restaurantId);
@@ -109,5 +115,16 @@ public class RestaurantServiceImpl implements RestaurantService {
             return Optional.of(view);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Retrieves a restaurant owned by the user with the specified username and converts it into a view object.
+     *
+     * @param ownerUsername the username of the restaurant owner
+     * @return the corresponding {@link RestaurantView} if found, or null otherwise
+     */
+    @Override
+    public RestaurantView getRestaurantByOwnerUsername(String ownerUsername) {
+        return restaurantRepository.findByOwner_Username(ownerUsername).map(restaurantMapper::convertRestaurantToRestaurantView).orElse(null);
     }
 }

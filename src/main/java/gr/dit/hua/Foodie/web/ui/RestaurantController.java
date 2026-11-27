@@ -26,8 +26,7 @@ public class RestaurantController {
     @GetMapping("/restaurants/{id}")
     public String menu(@PathVariable Long id, Model model) {
         // the service returns an Optional, so an unknown id becomes a 404 instead of a 500
-        RestaurantView restaurant = restaurantService.getRestaurantById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
+        RestaurantView restaurant = restaurantService.getRestaurantById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
 
         model.addAttribute("restaurant", restaurant);
         model.addAttribute("items", restaurantItemService.getItemsByRestaurantId(id));

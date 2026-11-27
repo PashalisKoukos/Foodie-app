@@ -52,8 +52,9 @@ public final class UserFixture implements CommandLineRunner {
         // Initialize JavaFaker with a specific locale and random seed for reproducible data
         final Faker fakeValuesGenerator = new Faker(new Locale("en-US"), new Random(42));
 
-        final int customersToCreate = 150;
-        final int ownersToCreate = 10;
+        // SMALL NUMBER IN ORDER TO RUN FASTER
+        final int customersToCreate = 5;
+        final int ownersToCreate = 6;
 
 
         // Create customers loop

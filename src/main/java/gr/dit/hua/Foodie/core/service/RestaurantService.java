@@ -10,4 +10,5 @@ public interface RestaurantService {
     List<RestaurantView> getRestaurantsByCuisine(String cuisine);
     Optional<RestaurantView> getRestaurantByOwnerId(Long ownerId);
     Optional<RestaurantView> getRestaurantById(Long restaurantId);
+    RestaurantView getRestaurantByOwnerUsername(String name);
 }
