@@ -76,8 +76,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
+                        .loginPage("/login") // custom login page (see login.html)
+                        .loginProcessingUrl("/login") // POST request target (handled by Spring Security)
                         .successHandler(authSuccessHandler)
                         .failureUrl("/login?error")
                         .permitAll()
